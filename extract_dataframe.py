@@ -61,6 +61,8 @@ class TweetDfExtractor:
         return polarity, self.subjectivity
 
     def find_created_time(self)->list:
+        created_at = [tw.get('created_at', None)
+                        for tw in self.tweets_list]
        
         return created_at
 
@@ -96,29 +98,31 @@ class TweetDfExtractor:
     def find_favourite_count(self)->list:
         favourite_count = [tw.get('retweeted_status', {}).get('favourite_count',None)
                         for tw in self.tweets_list]
+        return favourite_count
         
     
     def find_retweet_count(self)->list:
         retweet_count = [tw.get('retweeted_status', {}).get('retweet_count',None)
                         for tw in self.tweets_list]
+        return retweet_count
 
     def find_hashtags(self)->list:
         hashtags = [tw.get('entities', {}).get('hashtags',None)
                         for tw in self.tweets_list]
         _tags = []
-        hashtag_list_obj in all_hashtag_objs:
-        if(hash_tag_obj):
-            cur_hashtags = []
-            for hashtag_obj in hashtag_list_obj:
-                try:
-                    cur_hashtags.append(hashtag_obj['text'])
-                except KeyError:
-                    pass
-            hash_tags.append("".join(cur_hashtags))
-        else:
-            hash_tags.append(None)
+        for hashtag_list_obj in hashtags:
+            if(hashtag_list_obj):
+                cur_hashtags = []
+                for hashtag_obj in hashtag_list_obj:
+                    try:
+                        cur_hashtags.append(hashtag_obj['text'])
+                    except KeyError:
+                        pass
+                _tags.append("".join(cur_hashtags))
+            else:
+                _tags.append(None)
 
-        return hash_tags
+        return _tags
 
 
     def find_mentions(self)->list:
