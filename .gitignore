@@ -1,4 +1,6 @@
 __pycache__/
+processed_tweet_data
 Data/
 global_twitter_data.zip
+.ipynb_checkpoints
 
