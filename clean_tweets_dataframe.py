@@ -46,6 +46,8 @@ class Clean_Tweets:
                  'followers_count', 'friends_count']] = self.df[['sentiment', 'polarity', 'subjectivity',  'favorite_count', 'retweet_count',
                                                                  'followers_count', 'friends_count']].apply(pd.to_numeric, errors='coerce')
         return self.df
+
+    
     
     def remove_non_english_tweets(self) -> pd.DataFrame:
         index_names = self.df[self.df['lang'] != 'en'].index
@@ -71,6 +73,7 @@ class Clean_Tweets:
         self.df = self.convert_to_datetime()
         self.df = self.convert_to_numbers()
         self.df = self.remove_non_english_tweets()
+        self.df = self.handle_missing_values()
         ##self.df = self.clean_retweet_text()
         ##self.df = self.parse_source()
         ##self.df = self.fill_nullvalues()

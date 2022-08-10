@@ -1,0 +1,125 @@
+
+import numpy as np
+import pandas as pd
+
+import re
+
+
+class TweeterDataExplorator:
+
+    def __init__(self, df):
+
+        self.df = df
+
+    def read_head(self):
+        return self.df.head()
+
+    # catches no. of rows and columns and column info.
+    def get_info(self):
+        row_count, col_count = self.df.shape
+
+        print(f"Number of rows: {row_count}")
+        print(f"Number of columns: {col_count}")
+
+        return (row_count, col_count), self.df.info()
+
+    # Catches whenever a new value is seen in a column 
+    def get_count(self, column_name):
+        return self.df[column_name].value_counts()
+
+    #catches how many +1,0 and -1 polarities are there in a [polarity,count] dict
+    def get_polarities_count(self, places=[]):
+        df = self.df
+        polarity_score_df = pd.DataFrame(columns=['Polarity', 'Count'])
+
+        if (places and len(places) > 0):
+            df = df[df['place'].apply(
+                lambda x: x in places)]
+        df['score'] = df['polarity'].apply(
+            self.text_category)
+        value_counts = df['score'].value_counts()
+        
+        pos_count = neg_count = neu_count = 0
+        try:
+            pos_count = value_counts['positive']
+        except:
+            pos_count = 0
+        
+        try:
+            neg_count = value_counts['negative']
+        except:
+            neg_count = 0
+        
+        try:
+            neu_count = value_counts['neutral']
+        except:
+            neu_count = 0
+        
+        polarity_score_df['Polarity'] = ['negative', 'positive', 'neutral']
+        polarity_score_df['Count'] = [neg_count, pos_count, neu_count]
+        
+        return polarity_score_df
+
+    # catches a hashtag data frame for every tweet 
+
+    def get_hash_tag_df(self, places=[]):
+
+        df = self.df
+        if (places and len(places) > 0):
+            df = df[df['place'].apply(
+                lambda x: x in places)]
+        hash_tags = df.clean_text.apply(self.__find_hashtags)
+
+        flattened_hash_tags = []
+
+        for hash_tag_list in hash_tags:
+            for hash_tag in hash_tag_list:
+                flattened_hash_tags.append(hash_tag)
+
+        hashtag_df = pd.DataFrame(columns=['hashtag'])
+        hashtag_df['hashtag'] = flattened_hash_tags
+
+        return hashtag_df
+
+    #  this returns the value count of top hash tags used in a data frame
+    # if top is not specifed, it returns with a value count of every hashtag used
+    def most_used_hash_tag(self, top=None, places=[]):
+        return self.get_hash_tag_df(places)['hashtag'].value_counts().head(top).rename_axis('hashtags').to_frame('counts')
+
+    def visualze_polarity(self):
+        return
+
+    # returns value count of top language used
+    # if top is not specifed, it returns with a value count of language of every language used
+
+    def most_used_language(self, top=None):
+        return self.df['lang'].value_counts().head(top)
+
+    # returns value count of top users tweeted
+    # if top is not specifed, it returns with a value count of language of every users who tweeted
+    def authors(self, top=None, places=[]):
+
+        df = self.df
+        if (places and len(places) > 0):
+            df = df[df['place'].apply(
+                lambda x: x in places)]
+        return df['original_author'].value_counts().head(top)
+
+    def most_retweeted_tweet(self):
+        pass
+
+    def text_category(self, p: float) -> str:
+        if p > 0:
+            return "positive"
+        elif p == 0:
+            return "neutral"
+        else:
+            return "negative"
+    # private function that finds hash tags from a text
+
+    def __find_hashtags(self, tweet):
+
+        try:
+            return re.findall('(#[A-Za-z]+[A-Za-z0-9-_]+)', tweet)
+        except:
+            return []
