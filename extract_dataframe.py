@@ -52,15 +52,10 @@ class TweetDfExtractor:
         return full_text
 
     def find_original_text(self) -> list:
-        full_text = []
-        for tweet in self.tweets_list:
-            try:
-                full_text.append(
-                    tweet['retweeted_status']['text'])
-            except KeyError:
-                full_text.append("")
-        return full_text
-
+        original_text = []
+        for x in self.tweets_list:
+            original_text.append(x['text'])
+        return original_text
 
     def find_sentiments(self, text: list) -> list:
         polarity = []
