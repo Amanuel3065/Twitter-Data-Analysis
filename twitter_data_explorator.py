@@ -14,7 +14,6 @@ class TweeterDataExplorator:
     def read_head(self):
         return self.df.head()
 
-    # catches no. of rows and columns and column info.
     def get_info(self):
         row_count, col_count = self.df.shape
 
