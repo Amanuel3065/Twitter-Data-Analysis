@@ -2,7 +2,7 @@ import unittest
 import pandas as pd
 import sys, os
 
-sys.path.append(os.path.abspath(os.path.join("scripts")))
+sys.path.append(os.path.abspath(os.path.join('scripts')))
 
 from extract_dataframe import read_json
 from extract_dataframe import TweetDfExtractor
@@ -12,7 +12,7 @@ from extract_dataframe import TweetDfExtractor
 # Create a sample not more than 10 tweets and place it in a json file.
 # Provide the path to the samples tweets file you created below
 #sampletweetsjsonfile = "./sampletweets.json"   #put here the path to where you placed the file e.g. ./sampletweets.json. 
-_, tweet_list = read_json("./sampletweets.json" )
+_, tweet_list = read_json("../data/sampletweets.json" )
 
 columns = [
     "created_at",
@@ -32,8 +32,7 @@ columns = [
     "possibly_sensitive",
     "hashtags",
     "user_mentions",
-    "place",
-    "place_coord_boundaries",
+    "place"
 ]
 
 
