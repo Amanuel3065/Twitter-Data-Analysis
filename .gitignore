@@ -6,5 +6,6 @@ global_twitter_data.zip
 .ipynb_checkpoints
 .streamlit/secrets.toml
 sql/
- 
+scripts/
+Untitled.ipynb
 
